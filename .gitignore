@@ -1,0 +1,35 @@
+# Ignore system-specific files
+core.Microsoft*
+core.mongo*
+core.python*
+
+# Ignore environment configuration files
+env.py
+.env
+
+# Ignore virtual environment directories
+.venv/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Ignore Node.js modules
+node_modules/
+
+# Ignore GitHub-specific files
+.github/
+
+# Ignore personal files
+cloudinary_python.txt
+convert_csv_to_json.py
+check_db.py
+z_reference_personal/
+
+# Ignore static files
+/staticfiles/
+
+# Ignore database files
+*.db
+backup.sql
