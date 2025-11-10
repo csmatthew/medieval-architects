@@ -5,9 +5,9 @@ from .models import Craftsperson, Building
 @admin.register(Craftsperson)
 class CraftspersonAdmin(admin.ModelAdmin):
     list_display = (
+        "name",
         "forename",
         "preposition",
-        "name",
         "label",
         "sequence_label",
     )
