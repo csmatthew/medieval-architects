@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock title %}
+{% block content %}
+<div class="container py-4">
+    <h1>Search results for "{{ query }}"</h1>
+
+    <h2>Craftspeople</h2>
+    {% if craftspersons %}
+        <ul>
+        {% for c in craftspersons %}
+            <li><a href="#">{{ c }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No craftspeople found.</p>
+    {% endif %}
+
+    <h2>Buildings</h2>
+    {% if buildings %}
+        <ul>
+        {% for b in buildings %}
+            <li><a href="#">{{ b.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No buildings found.</p>
+    {% endif %}
+</div>
+{% endblock content %}
