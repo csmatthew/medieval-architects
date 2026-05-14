@@ -22,6 +22,10 @@ class Person(models.Model):
         null=True,
         help_text="e.g. II, III, Junior"
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]   # oldest → newest
 
     def __str__(self):
         return self.full_name

@@ -8,4 +8,3 @@ class PersonAdmin(admin.ModelAdmin):
         "full_name", "surname", "given_name", "label", "sequence_label"
     )
     search_fields = ("surname", "given_name", "label")
-    ordering = ("surname", "given_name", "sequence_label")
