@@ -22,6 +22,31 @@ class Person(models.Model):
         null=True,
         help_text="e.g. II, III, Junior"
     )
+    role_choices = [
+        ("bricklayer", "Bricklayer"),
+        ("brickmaker", "Brickmaker"),
+        ("carver", "Carver"),
+        ("carpenter", "Carpenter"),
+        ("clerical artist", "Clerical Artist"),
+        ("engineer", "Engineer"),
+        ("graver", "Graver"),
+        ("imager", "Imager"),
+        ("joiner", "Joiner"),
+        ("marbler", "Marbler"),
+        ("mason", "Mason"),
+        ("sculptor", "Sculptor"),
+        ("tomb maker", "Tomb Maker"),
+    ]
+    """from 'key to occupations', p. 372, Harvey 1984"""
+
+    role = models.CharField(
+        max_length=50,
+        choices=role_choices,
+        blank=True,
+        null=True,
+        help_text="Primary occupation or craft"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
