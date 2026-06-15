@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'core',
     'people',
     'buildings',
+    'chronology',
 ]
 
 MIDDLEWARE = [

@@ -1,4 +1,26 @@
 from django.db import models
+from chronology.models import UncertainDate
+
+ROLE_CHOICES = [
+        ("bricklayer", "Bricklayer"),
+        ("brickmaker", "Brickmaker"),
+        ("carver", "Carver"),
+        ("carpenter", "Carpenter"),
+        ("clerical artist", "Clerical Artist"),
+        ("engineer", "Engineer"),
+        ("graver", "Graver"),
+        ("imager", "Imager"),
+        ("joiner", "Joiner"),
+        ("layman", "Layman"),
+        ("marbler", "Marbler"),
+        ("mason", "Mason"),
+        ("millwright", "Millwright"),
+        ("monk", "Monk"),
+        ("priest", "Priest"),
+        ("sculptor", "Sculptor"),
+        ("tomb maker", "Tomb Maker"),
+    ]
+"""from 'key to occupations', p. 372, Harvey 1984"""
 
 
 class Person(models.Model):
@@ -22,29 +44,37 @@ class Person(models.Model):
         null=True,
         help_text="e.g. II, III, Junior"
     )
-    role_choices = [
-        ("bricklayer", "Bricklayer"),
-        ("brickmaker", "Brickmaker"),
-        ("carver", "Carver"),
-        ("carpenter", "Carpenter"),
-        ("clerical artist", "Clerical Artist"),
-        ("engineer", "Engineer"),
-        ("graver", "Graver"),
-        ("imager", "Imager"),
-        ("joiner", "Joiner"),
-        ("marbler", "Marbler"),
-        ("mason", "Mason"),
-        ("sculptor", "Sculptor"),
-        ("tomb maker", "Tomb Maker"),
-    ]
-    """from 'key to occupations', p. 372, Harvey 1984"""
 
     role = models.CharField(
         max_length=50,
-        choices=role_choices,
+        choices=ROLE_CHOICES,
         blank=True,
         null=True,
         help_text="Primary occupation or craft"
+    )
+
+    birth = models.ForeignKey(
+        UncertainDate,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="birth_of",
+    )
+
+    floruit = models.ForeignKey(
+        UncertainDate,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="floruit_of",
+    )
+
+    death = models.ForeignKey(
+        UncertainDate,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="death_of",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
