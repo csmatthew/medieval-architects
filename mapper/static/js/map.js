@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (mapContainer && !mapContainer._leaflet_map) {
         map = L.map('map', {
             center: [53.5, -2.25], // Default center
-            zoom: 10,
-            minZoom: 6,
+            zoom: 6,
+            minZoom: 0,
             maxBounds: [
                 [49.5, -10.5],
                 [59, 2]
             ],
-            maxBoundsViscosity: 1.0,
+            maxBoundsViscosity: 0.5,
             zoomControl: false
         });
         mapContainer._leaflet_map = map;
