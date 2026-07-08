@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block additional_css %}
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet.markercluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <!-- Custom Map CSS --> 
+    <link rel="stylesheet" href="{% static 'css/map.css' %}">
+{% endblock additional_css %}
+
+{% block content %}
+<div class="container-fluid pt-5 pb-5 bg-light">
+    <div id="map-background-overlay" class="map-background-overlay"></div>
+    <div id="map-container">
+        <div id="map-loading-overlay" class="map-loading-overlay hidden">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading Valor Records...</span>
+        </div>
+    </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="map-filter">
+                <label><input type="checkbox" id="view-all-filter" value="All" checked> View All</label>
+                <label><input type="checkbox" class="record-type-filter" value="Monastery"> Monastery</label>
+                <label><input type="checkbox" class="record-type-filter" value="Rectory"> Rectory</label>
+                <label><input type="checkbox" class="record-type-filter" value="Collegiate"> Collegiate</label>
+                {% if user.is_authenticated %}
+                    <label><input type="checkbox" id="show-own-records"> Show only my records</label>
+                {% endif %}
+            </div>
+            <div>
+                {% if user.is_authenticated %}
+                    <button class="btn btn-primary" id="add-record-btn">Add Record</button>
+                {% endif %}
+            </div>
+        </div>
+        <div id="map-overlay" class="map-overlay d-none">
+            <span class="map-overlay-text">Click on the map to add a record</span>
+        </div>
+        <div id="map"></div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
+
+{% block additional_scripts %}
+    <!-- Custom JS -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Leaflet.markercluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <!-- Custom Map JS -->
+    <script src="{% static 'js/map.js' %}"></script>
+    <script>
+        const isUserAuthenticated = {{ is_user_authenticated|yesno:"true,false" }};
+        {% if user.is_authenticated %}
+        const currentUsername = "{{ user.username|escapejs }}";
+        {% else %}
+        const currentUsername = null;
+        {% endif %}
+    </script>
+{% endblock additional_scripts %}
