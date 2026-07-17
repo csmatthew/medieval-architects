@@ -7,23 +7,23 @@ from .models import Person
 class PersonAdmin(admin.ModelAdmin):
     list_display = (
         "full_name",
-        "birth_display",
-        "floruit_display",
+        "floruit_start_display",
+        "floruit_end_display",
         "death_display",
         "created_at",
     )
-    search_fields = ("surname", "given_name", "label", "role_choices")
+    search_fields = ("surname", "given_name", "label", "role")
     date_hierarchy = "created_at"
     list_filter = ("role",)
 
-    @admin.display(description="Birth")
-    def birth_display(self, obj):
-        return obj.birth.display() if obj.birth else ""
+    @admin.display(description="Floruit Start")
+    def floruit_start_display(self, obj):
+        return obj.floruit_start.display() if obj.floruit_start else "-"
 
-    @admin.display(description="Floruit")
-    def floruit_display(self, obj):
-        return obj.floruit.display() if obj.floruit else ""
+    @admin.display(description="Floruit End")
+    def floruit_end_display(self, obj):
+        return obj.floruit_end.display() if obj.floruit_end else "-"
 
     @admin.display(description="Death")
     def death_display(self, obj):
-        return obj.death.display() if obj.death else ""
+        return obj.death.display() if obj.death else "-"

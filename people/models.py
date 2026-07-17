@@ -53,20 +53,20 @@ class Person(models.Model):
         help_text="Primary occupation or craft"
     )
 
-    birth = models.ForeignKey(
+    floruit_start = models.ForeignKey(
         UncertainDate,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="birth_of",
+        related_name="floruit_start_of",
     )
 
-    floruit = models.ForeignKey(
+    floruit_end = models.ForeignKey(
         UncertainDate,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="floruit_of",
+        related_name="floruit_end_of",
     )
 
     death = models.ForeignKey(

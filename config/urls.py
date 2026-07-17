@@ -24,4 +24,5 @@ urlpatterns = [
     path('', mapper_view, name='mapper'),
     path('core/', include('core.urls')),
     path('about/', about_view, name='about'),
+    path('people/', include('people.urls')),
 ]
