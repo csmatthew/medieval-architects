@@ -1,5 +1,4 @@
 from django.db import models
-from people.models import Person
 
 
 class Building(models.Model):
@@ -7,7 +6,7 @@ class Building(models.Model):
     location = models.CharField(max_length=200, blank=True, null=True)
 
     people = models.ManyToManyField(
-        Person,
+        "people.Person",
         related_name="buildings",
         blank=True,
         help_text="People associated with this building"
