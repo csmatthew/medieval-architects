@@ -15,7 +15,7 @@ class UncertainDate(models.Model):
     year = models.IntegerField(null=True, blank=True)
 
     qualifier = models.CharField(
-        max_length=20, choices=QUALIFIERS, default="unknown"
+        max_length=20, choices=QUALIFIERS, default="exact"
     )
 
     class Meta:

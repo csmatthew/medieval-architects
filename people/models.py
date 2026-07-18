@@ -53,7 +53,7 @@ class Person(models.Model):
         help_text="Primary occupation or craft"
     )
 
-    floruit_start = models.ForeignKey(
+    floruit_start = models.OneToOneField(
         UncertainDate,
         on_delete=models.SET_NULL,
         null=True,
@@ -61,7 +61,7 @@ class Person(models.Model):
         related_name="floruit_start_of",
     )
 
-    floruit_end = models.ForeignKey(
+    floruit_end = models.OneToOneField(
         UncertainDate,
         on_delete=models.SET_NULL,
         null=True,
@@ -69,7 +69,7 @@ class Person(models.Model):
         related_name="floruit_end_of",
     )
 
-    death = models.ForeignKey(
+    death = models.OneToOneField(
         UncertainDate,
         on_delete=models.SET_NULL,
         null=True,
