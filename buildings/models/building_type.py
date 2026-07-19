@@ -45,10 +45,6 @@ class BuildingType(models.Model):
         help_text="Specific type of building",
     )
 
-    name = models.CharField(max_length=100, blank=True, null=True)
-
-    description = models.TextField(blank=True, null=True)
-
     @classmethod
     def grouped_choices(cls):
         groups = {}
@@ -92,4 +88,4 @@ class BuildingType(models.Model):
             )
 
     def __str__(self):
-        return self.name
+        return f"{self.category} – {self.subtype}"

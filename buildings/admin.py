@@ -29,7 +29,7 @@ class BuildingAdmin(admin.ModelAdmin):
 
 @admin.register(BuildingType)
 class BuildingTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "category", "subtype")
+    list_display = ("category", "subtype")
     # readonly_fields = ("name", "category", "subtype", "description")
 
     def has_add_permission(self, request):
