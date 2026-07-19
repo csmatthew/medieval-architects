@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from buildings.models import Building
+from buildings.models.building_name import Building
 
 from .models import Person
 

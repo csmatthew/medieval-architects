@@ -1,5 +1,6 @@
 let map; // Define map variable globally
 let allMarkers = L.markerClusterGroup(); // Marker cluster group
+let buildingMarkers = L.markerClusterGroup();
 
 function getQueryParams() {
     const params = {};
@@ -49,20 +50,39 @@ document.addEventListener('DOMContentLoaded', function () {
         const loadingOverlay = document.getElementById('map-loading-overlay');
         if (loadingOverlay) loadingOverlay.classList.remove('hidden');
 
-        // Fetch Valor Records and add them to the map
-        fetch('/mapper/valor-records/')
+        // Fetch buildings with GeoRef coordinates and add them to the map
+        fetch('/buildings/georef/')
             .then(response => response.json())
             .then(data => {
-                if (typeof createMarkers === 'function') {
-                    createMarkers(map, data);
-                    setupFilters(data); // Initialize filter functionality
-                } else {
-                    console.warn('Map marker helpers are unavailable, rendering the base map only.');
+                buildingMarkers.clearLayers();
+
+                data.forEach(record => {
+                    const marker = L.marker([record.latitude, record.longitude]);
+                    const popupParts = [record.name];
+
+                    if (record.location) {
+                        popupParts.push(record.location);
+                    }
+
+                    if (record.county) {
+                        popupParts.push(record.county);
+                    }
+
+                    marker.bindPopup(popupParts.join('<br>'));
+                    buildingMarkers.addLayer(marker);
+                });
+
+                if (data.length > 0) {
+                    map.addLayer(buildingMarkers);
+
+                    if (!(params.lat && params.lng)) {
+                        map.fitBounds(buildingMarkers.getBounds().pad(0.2));
+                    }
                 }
                 if (loadingOverlay) loadingOverlay.classList.add('hidden'); // Hide after markers load
             })
             .catch(error => {
-                console.error('Error fetching valor records:', error);
+                console.error('Error fetching building GeoRef data:', error);
                 if (loadingOverlay) loadingOverlay.classList.add('hidden');
             });
     }

@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Building
+from .models.building_name import Building
+from .models.georef import GeoRef
+
+
+class GeoRefInline(admin.StackedInline):
+    model = GeoRef
+    extra = 0
 
 
 @admin.register(Building)
@@ -8,6 +14,7 @@ class BuildingAdmin(admin.ModelAdmin):
         "name",
         "location",
         "county",
+        "created_at",
     )
     search_fields = (
         "name",
@@ -15,3 +22,4 @@ class BuildingAdmin(admin.ModelAdmin):
         "county",
     )
     filter_horizontal = ("people",)
+    inlines = [GeoRefInline]
