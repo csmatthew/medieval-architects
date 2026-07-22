@@ -1,25 +1,13 @@
 from django import forms
 from django.contrib import admin
-from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.utils.html import format_html, format_html_join
 
-from buildings.models.building_name import Building
+from buildings.models.building_phase import BuildingPhase
 
 from .models import Person
 
 
 class PersonAdminForm(forms.ModelForm):
-    buildings = forms.ModelMultipleChoiceField(
-        queryset=Building.objects.all(),
-        required=False,
-        widget=FilteredSelectMultiple("Buildings", is_stacked=False),
-        help_text="Buildings associated with this person",
-    )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields["buildings"].initial = self.instance.buildings.all()
-
     class Meta:
         model = Person
         fields = (
@@ -32,13 +20,13 @@ class PersonAdminForm(forms.ModelForm):
             "floruit_start",
             "floruit_end",
             "death",
-            "buildings",
         )
 
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     form = PersonAdminForm
+    readonly_fields = ("worked_buildings_display",)
     list_display = (
         "full_name",
         "floruit_start_display",
@@ -50,9 +38,96 @@ class PersonAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     list_filter = ("role",)
 
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        form.instance.buildings.set(form.cleaned_data.get("buildings", []))
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "surname",
+                    "given_name",
+                    "preposition",
+                    "label",
+                    "sequence_label",
+                    "role",
+                    "floruit_start",
+                    "floruit_end",
+                    "death",
+                )
+            },
+        ),
+        (
+            "Buildings Worked On",
+            {
+                "fields": ("worked_buildings_display",),
+            },
+        ),
+    )
+
+    @admin.display(description="Buildings")
+    def buildings_display(self, obj):
+        buildings = (
+            BuildingPhase.objects.filter(person=obj)
+            .select_related("building")
+            .values_list("building__name", flat=True)
+            .distinct()
+        )
+        buildings = list(buildings)
+        return ", ".join(buildings) if buildings else "-"
+
+    @admin.display(description="Buildings Worked On")
+    def worked_buildings_display(self, obj):
+        phases = (
+            BuildingPhase.objects.filter(person=obj)
+            .select_related("building")
+            .prefetch_related("elements")
+            .order_by("building__name", "id")
+        )
+
+        grouped_buildings = {}
+        for phase in phases:
+            building = phase.building
+            building_entry = grouped_buildings.setdefault(
+                building.id,
+                {
+                    "name": building.name,
+                    "elements": [],
+                },
+            )
+            for element in phase.elements.all():
+                element_name = element.name
+                if element_name not in building_entry["elements"]:
+                    building_entry["elements"].append(element_name)
+
+        if not grouped_buildings:
+            return "-"
+
+        items = []
+        for building in grouped_buildings.values():
+            if building["elements"]:
+                items.append(
+                    (
+                        building["name"],
+                        ", ".join(building["elements"]),
+                    )
+                )
+            else:
+                items.append((building["name"], ""))
+
+        return format_html(
+            "<ul style='margin:0; padding-left:1.2em;'>{}</ul>",
+            format_html_join(
+                "",
+                "<li>{}{}{}</li>",
+                (
+                    (
+                        name,
+                        " - " if elements else "",
+                        elements,
+                    )
+                    for name, elements in items
+                ),
+            ),
+        )
 
     @admin.display(description="Floruit Start")
     def floruit_start_display(self, obj):
