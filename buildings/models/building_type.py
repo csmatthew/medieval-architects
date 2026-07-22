@@ -7,4 +7,4 @@ class BuildingType(models.Model):
     elements = models.ManyToManyField("Element", blank=True)
 
     def __str__(self):
-        return f"{self.category} – {self.subtype}"
+        return f"{self.category} – {self.subtype.name}"
