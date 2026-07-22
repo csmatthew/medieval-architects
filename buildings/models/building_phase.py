@@ -28,6 +28,11 @@ class BuildingPhase(models.Model):
         blank=True,
         related_name="building_phase_end_of",
     )
+    elements = models.ManyToManyField(
+        "Element",
+        blank=True,
+        related_name="building_phases",
+    )
     notes = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:

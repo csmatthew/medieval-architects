@@ -16,7 +16,7 @@ class GeoRefInline(admin.StackedInline):
 class BuildingPhaseInline(admin.TabularInline):
     model = BuildingPhase
     extra = 0
-    autocomplete_fields = ("person",)
+    autocomplete_fields = ("person", "elements")
 
 
 @admin.register(Building)
@@ -60,15 +60,17 @@ class BuildingPhaseAdmin(admin.ModelAdmin):
         "person",
         "start_display",
         "end_display",
+        "elements_display",
         "notes",
     )
     search_fields = (
         "building__name",
         "person__given_name",
         "person__surname",
+        "elements__name",
         "notes",
     )
-    autocomplete_fields = ("building", "person")
+    autocomplete_fields = ("building", "person", "elements")
 
     @admin.display(description="Start")
     def start_display(self, obj):
@@ -84,12 +86,17 @@ class BuildingPhaseAdmin(admin.ModelAdmin):
 
         return obj.end.display()
 
+    @admin.display(description="Elements")
+    def elements_display(self, obj):
+        names = list(obj.elements.values_list("name", flat=True))
+        return ", ".join(names) if names else "-"
+
 
 @admin.register(BuildingType)
 class BuildingTypeAdmin(admin.ModelAdmin):
+    exclude = ("elements",)
     list_display = ("category", "subtype")
-    search_fields = ("category__name", "subtype__name", "elements__name")
-    filter_horizontal = ("elements",)
+    search_fields = ("category__name", "subtype__name")
 
 
 @admin.register(Category)
