@@ -1,4 +1,5 @@
 from django.db import models
+from chronology.models import UncertainDate
 from .building_type import BuildingType
 
 
@@ -7,6 +8,22 @@ class Building(models.Model):
     location = models.CharField(max_length=200, blank=True, null=True)
     building_type = models.ForeignKey(
         BuildingType, on_delete=models.CASCADE, null=True, blank=True
+    )
+
+    construction_start = models.OneToOneField(
+        UncertainDate,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="construction_start_of",
+    )
+
+    construction_end = models.OneToOneField(
+        UncertainDate,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="construction_end_of",
     )
 
     people = models.ManyToManyField(

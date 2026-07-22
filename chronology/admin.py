@@ -7,9 +7,11 @@ from .models import UncertainDate
 class UncertainDateAdminForm(forms.ModelForm):
     class Meta:
         model = UncertainDate
-        fields = ("year", "qualifier")
+        fields = ("year", "month", "day", "qualifier")
         labels = {
             "year": "Date",
+            "month": "Month",
+            "day": "Day",
         }
 
 

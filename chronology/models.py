@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 
 
@@ -13,6 +15,8 @@ class UncertainDate(models.Model):
 
     # Numeric boundaries
     year = models.IntegerField(null=True, blank=True)
+    month = models.IntegerField(null=True, blank=True)
+    day = models.IntegerField(null=True, blank=True)
 
     qualifier = models.CharField(
         max_length=20, choices=QUALIFIERS, default="exact"
@@ -29,6 +33,12 @@ class UncertainDate(models.Model):
         # Human-friendly output
         if self.year is None:
             return "unknown"
+
+        if self.month is not None and self.day is not None:
+            try:
+                return date(self.year, self.month, self.day).isoformat()
+            except ValueError:
+                pass
 
         if self.qualifier == "exact":
             return str(self.year)

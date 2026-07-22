@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models.building_name import Building
+from .models.building_phase import BuildingPhase
 from .models.building_type import BuildingType
 from .models.building_category import Category
 from .models.building_subtype import Subtype
@@ -12,12 +13,21 @@ class GeoRefInline(admin.StackedInline):
     extra = 0
 
 
+class BuildingPhaseInline(admin.TabularInline):
+    model = BuildingPhase
+    extra = 0
+    autocomplete_fields = ("person",)
+
+
 @admin.register(Building)
 class BuildingAdmin(admin.ModelAdmin):
+    exclude = ("people",)
     list_display = (
         "name",
         "location",
         "county",
+        "construction_start_display",
+        "construction_end_display",
         "created_at",
         "building_type",
     )
@@ -26,8 +36,53 @@ class BuildingAdmin(admin.ModelAdmin):
         "location",
         "county",
     )
-    filter_horizontal = ("people",)
-    inlines = [GeoRefInline]
+    inlines = [GeoRefInline, BuildingPhaseInline]
+
+    @admin.display(description="Construction Start")
+    def construction_start_display(self, obj):
+        if not obj.construction_start:
+            return "-"
+
+        return obj.construction_start.display()
+
+    @admin.display(description="Construction End")
+    def construction_end_display(self, obj):
+        if not obj.construction_end:
+            return "-"
+
+        return obj.construction_end.display()
+
+
+@admin.register(BuildingPhase)
+class BuildingPhaseAdmin(admin.ModelAdmin):
+    list_display = (
+        "building",
+        "person",
+        "start_display",
+        "end_display",
+        "notes",
+    )
+    search_fields = (
+        "building__name",
+        "person__given_name",
+        "person__surname",
+        "notes",
+    )
+    autocomplete_fields = ("building", "person")
+
+    @admin.display(description="Start")
+    def start_display(self, obj):
+        if not obj.start:
+            return "-"
+
+        return obj.start.display()
+
+    @admin.display(description="End")
+    def end_display(self, obj):
+        if not obj.end:
+            return "-"
+
+        return obj.end.display()
 
 
 @admin.register(BuildingType)
