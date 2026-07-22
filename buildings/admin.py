@@ -1,6 +1,9 @@
 from django.contrib import admin
 from .models.building_name import Building
 from .models.building_type import BuildingType
+from .models.building_category import Category
+from .models.building_subtype import Subtype
+from .models.building_element import Element
 from .models.georef import GeoRef
 
 
@@ -30,10 +33,23 @@ class BuildingAdmin(admin.ModelAdmin):
 @admin.register(BuildingType)
 class BuildingTypeAdmin(admin.ModelAdmin):
     list_display = ("category", "subtype")
-    # readonly_fields = ("name", "category", "subtype", "description")
+    search_fields = ("category__name", "subtype__name", "elements__name")
+    filter_horizontal = ("elements",)
 
-    def has_add_permission(self, request):
-        return True
 
-    def has_delete_permission(self, request, obj=None):
-        return True
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
+
+
+@admin.register(Subtype)
+class SubtypeAdmin(admin.ModelAdmin):
+    list_display = ("name", "category")
+    search_fields = ("name", "category__name")
+
+
+@admin.register(Element)
+class ElementAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
