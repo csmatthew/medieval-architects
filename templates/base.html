@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -11,7 +11,11 @@
             name="keywords"
             content="Valor, Mapping, History, Records, Monastery, Deanery, England, Database"
         />
-        <title>{% block title %} Medieval Architects {% endblock title %}</title>
+        <title>
+            {% block title %} 
+            Medieval Architects 
+            {% endblock title %}
+        </title>
         {% load static %}
         <!-- Favicon -->
         <link
@@ -35,7 +39,10 @@
             <!-- Navigation -->
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-light" href="{% url 'mapper' %}">
+                    <a
+                        class="navbar-brand text-light"
+                        href="{% url 'mapper' %}"
+                    >
                         <span class="brand">Medieval Architects</span>
                     </a>
                     <button
@@ -65,7 +72,7 @@
                                     href="{% url 'about' %}"
                                     >About</a
                                 >
-                            </li>                
+                            </li>
                         </ul>
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             {% if user.is_authenticated %}
@@ -74,7 +81,6 @@
                                     >Logged in as {{ user.username }}</span
                                 >
                             </li>
-                            {% comment %}
                             <li class="nav-item">
                                 <a
                                     class="nav-link text-light"
@@ -82,11 +88,17 @@
                                     >Logout</a
                                 >
                             </li>
-                            {% endcomment %}
                             {% else %}
                             <li class="nav-item">
                                 <span class="nav-link disabled text-light"
                                     >Not Logged In</span
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link text-light"
+                                    href="{% url 'account_login' %}"
+                                    >Login</a
                                 >
                             </li>
                             {% endif %}
@@ -99,20 +111,42 @@
             {% endblock content %}
             <footer class="footer mt-auto py-3 bg-dark">
                 <p class="m-0 text-center text-light">
-                    {% block copyright %} MMXXVI Christopher Matthew {% endblock copyright %}
+                {% block copyright %} 
+                    MMXXVI Christopher Matthew
+                {% endblock copyright %}
                 </p>
                 <p class="m-0 text-center text-light">
                     Follow us:
-                    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Follow us on Facebook">
+                    <a
+                        href="https://facebook.com/"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Follow us on Facebook"
+                    >
                         <i class="fab fa-facebook-square ms-3 text-light"></i>
                     </a>
-                    <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Follow us on Twitter">
+                    <a
+                        href="https://twitter.com/"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Follow us on Twitter"
+                    >
                         <i class="fab fa-twitter-square ms-3 text-light"></i>
                     </a>
-                    <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Follow us on Instagram">
+                    <a
+                        href="https://instagram.com/"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Follow us on Instagram"
+                    >
                         <i class="fab fa-instagram-square ms-3 text-light"></i>
                     </a>
-                    <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="Follow us on YouTube">
+                    <a
+                        href="https://youtube.com/"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Follow us on YouTube"
+                    >
                         <i class="fab fa-youtube-square ms-3 text-light"></i>
                     </a>
                 </p>
@@ -136,7 +170,7 @@
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <!-- Custom JS -->
         <script src="{% static 'js/script.js' %}"></script>
-                <!-- Set global JS variable for authentication status -->
+        <!-- Set global JS variable for authentication status -->
         <script>
             window.isUserAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
         </script>
