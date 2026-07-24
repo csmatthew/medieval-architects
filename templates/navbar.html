@@ -36,9 +36,21 @@
                     <a
                         class="nav-link text-light{% if request.path == '/search/' %} active{% endif %}"
                         href="{% url 'search' %}"
-                        >Search</a
+                        >Detailed Search</a
                     >
                 </li>
+                <form class="d-flex" method="get" action="{% url 'search' %}">
+                    <input
+                        class="form-control me-2"
+                        type="search"
+                        name="q"
+                        placeholder="Search buildings, people..."
+                        aria-label="Search"
+                    />
+                    <button class="btn btn-outline-light" type="submit">
+                        Search
+                    </button>
+                </form>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
@@ -67,18 +79,9 @@
                         >Login</a
                     >
                 </li>
-                <form class="d-flex" method="get" action="{% url 'search' %}">
-                    <input
-                        class="form-control me-2"
-                        type="search"
-                        name="q"
-                        placeholder="Search buildings, people..."
-                        aria-label="Search"
-                    />
-                    <button class="btn btn-outline-light" type="submit">
-                        Search
-                    </button>
-                </form>
+
+                
+
                 {% endif %}
             </ul>
         </div>
