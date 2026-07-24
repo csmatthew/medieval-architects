@@ -12,9 +12,7 @@
             content="Valor, Mapping, History, Records, Monastery, Deanery, England, Database"
         />
         <title>
-            {% block title %} 
-            Medieval Architects 
-            {% endblock title %}
+            {% block title %} Medieval Architects {% endblock title %}
         </title>
         {% load static %}
         <!-- Favicon -->
@@ -34,124 +32,12 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
         {% block additional_css %} {% endblock additional_css %}
     </head>
+
     <body>
-        <div class="site-wrapper d-flex flex-column min-vh-100">
-            <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div class="container-fluid">
-                    <a
-                        class="navbar-brand text-light"
-                        href="{% url 'mapper' %}"
-                    >
-                        <span class="brand">Medieval Architects</span>
-                    </a>
-                    <button
-                        class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarText"
-                        aria-controls="navbarText"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarText">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link text-light{% if request.path == home_url %} active{% endif %}"
-                                    aria-current="page"
-                                    href="{% url 'mapper' %}"
-                                    >Home</a
-                                >
-                            </li>
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link text-light{% if request.path == '/about/' %} active{% endif %}"
-                                    href="{% url 'about' %}"
-                                    >About</a
-                                >
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                            {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <span class="nav-link disabled text-light"
-                                    >Logged in as {{ user.username }}</span
-                                >
-                            </li>
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link text-light"
-                                    href="{% url 'account_logout' %}"
-                                    >Logout</a
-                                >
-                            </li>
-                            {% else %}
-                            <li class="nav-item">
-                                <span class="nav-link disabled text-light"
-                                    >Not Logged In</span
-                                >
-                            </li>
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link text-light"
-                                    href="{% url 'account_login' %}"
-                                    >Login</a
-                                >
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            {% block content %}
-            <!-- Content Goes here -->
-            {% endblock content %}
-            <footer class="footer mt-auto py-3 bg-dark">
-                <p class="m-0 text-center text-light">
-                {% block copyright %} 
-                    MMXXVI Christopher Matthew
-                {% endblock copyright %}
-                </p>
-                <p class="m-0 text-center text-light">
-                    Follow us:
-                    <a
-                        href="https://facebook.com/"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="Follow us on Facebook"
-                    >
-                        <i class="fab fa-facebook-square ms-3 text-light"></i>
-                    </a>
-                    <a
-                        href="https://twitter.com/"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="Follow us on Twitter"
-                    >
-                        <i class="fab fa-twitter-square ms-3 text-light"></i>
-                    </a>
-                    <a
-                        href="https://instagram.com/"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="Follow us on Instagram"
-                    >
-                        <i class="fab fa-instagram-square ms-3 text-light"></i>
-                    </a>
-                    <a
-                        href="https://youtube.com/"
-                        target="_blank"
-                        rel="noopener"
-                        aria-label="Follow us on YouTube"
-                    >
-                        <i class="fab fa-youtube-square ms-3 text-light"></i>
-                    </a>
-                </p>
-            </footer>
-        </div>
+        {% include "navbar.html" %} {% block content %}
+        <!-- Content Goes here -->
+        {% endblock content %} {% include "footer.html" %}
+
         <!-- JQuery JS -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <!-- Bootstrap JS -->
