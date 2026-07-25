@@ -1,25 +1,26 @@
 from django.db import models
 from chronology.models import UncertainDate
+from django.utils.text import slugify
 
 ROLE_CHOICES = [
-        ("bricklayer", "Bricklayer"),
-        ("brickmaker", "Brickmaker"),
-        ("carver", "Carver"),
-        ("carpenter", "Carpenter"),
-        ("clerical artist", "Clerical Artist"),
-        ("engineer", "Engineer"),
-        ("graver", "Graver"),
-        ("imager", "Imager"),
-        ("joiner", "Joiner"),
-        ("layman", "Layman"),
-        ("marbler", "Marbler"),
-        ("mason", "Mason"),
-        ("millwright", "Millwright"),
-        ("monk", "Monk"),
-        ("priest", "Priest"),
-        ("sculptor", "Sculptor"),
-        ("tomb maker", "Tomb Maker"),
-    ]
+    ("bricklayer", "Bricklayer"),
+    ("brickmaker", "Brickmaker"),
+    ("carver", "Carver"),
+    ("carpenter", "Carpenter"),
+    ("clerical artist", "Clerical Artist"),
+    ("engineer", "Engineer"),
+    ("graver", "Graver"),
+    ("imager", "Imager"),
+    ("joiner", "Joiner"),
+    ("layman", "Layman"),
+    ("marbler", "Marbler"),
+    ("mason", "Mason"),
+    ("millwright", "Millwright"),
+    ("monk", "Monk"),
+    ("priest", "Priest"),
+    ("sculptor", "Sculptor"),
+    ("tomb maker", "Tomb Maker"),
+]
 """from 'key to occupations', p. 372, Harvey 1984"""
 
 
@@ -30,19 +31,16 @@ class Person(models.Model):
         max_length=20,
         blank=True,
         null=True,
-        help_text="e.g. de, von, van, ap, fitz"
+        help_text="e.g. de, von, van, ap, fitz",
     )
     label = models.CharField(
         max_length=100,
         blank=True,
         null=True,
-        help_text="e.g. the Mason, the Elder, the Younger"
+        help_text="e.g. the Mason, the Elder, the Younger",
     )
     sequence_label = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True,
-        help_text="e.g. II, III, Junior"
+        max_length=20, blank=True, null=True, help_text="e.g. II, III, Junior"
     )
 
     role = models.CharField(
@@ -50,7 +48,7 @@ class Person(models.Model):
         choices=ROLE_CHOICES,
         blank=True,
         null=True,
-        help_text="Primary occupation or craft"
+        help_text="Primary occupation or craft",
     )
 
     floruit_start = models.OneToOneField(
@@ -78,9 +76,10 @@ class Person(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     class Meta:
-        ordering = ["created_at"]   # oldest → newest
+        ordering = ["created_at"]  # oldest → newest
 
     def __str__(self):
         return self.full_name
@@ -109,3 +108,27 @@ class Person(models.Model):
             parts.append(self.sequence_label)
 
         return " ".join(parts)
+
+    def save(self, *args, **kwargs):
+        """
+        Auto-generate a unique slug from `full_name` when not provided.
+        """
+        # Only set slug if it's empty or blank
+        if not self.slug:
+            base = slugify(self.full_name) or f"person-{self.pk or ''}"
+
+            slug = base
+            counter = 1
+            # Ensure uniqueness (exclude self when updating)
+            while (
+                type(self)
+                .objects
+                .filter(slug=slug)
+                .exclude(pk=self.pk)
+                .exists()
+            ):
+                slug = f"{base}-{counter}"
+                counter += 1
+            self.slug = slug
+
+        super().save(*args, **kwargs)

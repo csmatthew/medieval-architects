@@ -1,22 +1,61 @@
-{% extends "base.html" %}
-
-{% block title %}Detailed Search | Medieval Architects{% endblock title %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Detailed Search | Medieval
+Architects{% endblock title %} {% block content %}
 <div class="container py-5">
     <h1>Detailed Search</h1>
-    <p>
-        Medieval Architects is an interactive map and database of medieval architectural records, designed to make the historic architecture of the period accessible and engaging for researchers and the public.
-    </p>
-    <p>
-        This project brings those records to life with modern mapping and search tools.
-    </p>
-    <ul>
-        <li>Explore records by location and type</li>
-        <li>Add and edit entries (registered users)</li>
-    </ul>
-    <p>
-        For more information, please contact the project maintainer.
-    </p>
+    <p>Use the form below to search buildings and people.</p>
+
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input
+                type="search"
+                name="q"
+                value="{{ q|default:'' }}"
+                class="form-control"
+                placeholder="Search buildings, locations, or people"
+            />
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    {% if q %}
+    <h2>Results for "{{ q }}"</h2>
+
+    <h3 class="mt-3">Buildings ({{ building_results.paginator.count }})</h3>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for record in building_results %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'record_detail' record.pk %}"
+                            >{{ record.name }}</a
+                        >
+                    </h5>
+                    {% if record.location %}
+                    <p class="card-text">{{ record.location }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <div class="alert alert-warning">No buildings found.</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3 class="mt-3">People ({{ person_results|length }})</h3>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <ul>
+            {% for person in person_results %}
+            <li>{{ person.full_name }}</li>
+            {% empty %}
+            <div class="col">
+                <div class="alert alert-warning">No buildings found.</div>
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 </div>
 {% endblock content %}
