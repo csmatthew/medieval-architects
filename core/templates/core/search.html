@@ -48,10 +48,14 @@ Architects{% endblock title %} {% block content %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <ul>
             {% for person in person_results %}
-            <li>{{ person.full_name }}</li>
+            <li>
+                <a href="{% url 'person_detail' person.slug %}">
+                    {{ person.full_name }}
+                </a>
+            </li>
             {% empty %}
             <div class="col">
-                <div class="alert alert-warning">No buildings found.</div>
+                <div class="alert alert-warning">No persons found.</div>
             </div>
             {% endfor %}
         </ul>

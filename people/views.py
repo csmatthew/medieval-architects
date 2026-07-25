@@ -1,10 +1,14 @@
-import pandas as pd
-from datetime import datetime
-
 from django.http import HttpResponse
 from django.utils import timezone
-
+from django.shortcuts import get_object_or_404, render
+import pandas as pd
+from datetime import datetime
 from .models import Person
+
+
+def person_detail_view(request, slug):
+    person = get_object_or_404(Person, slug=slug)
+    return render(request, 'people/person_detail.html', {'person': person})
 
 
 def export_to_excel(request):

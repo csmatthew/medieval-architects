@@ -33,7 +33,7 @@
         {% block additional_css %} {% endblock additional_css %}
     </head>
 
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         {% include "navbar.html" %} {% block content %}
         <!-- Content Goes here -->
         {% endblock content %} {% include "footer.html" %}

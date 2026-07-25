@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>{{ person.full_name }}</h1>
+
+    {% if person.role %}
+        <p><strong>Occupation:</strong> {{ person.get_role_display }}</p>
+    {% endif %}
+
+    {% if person.floruit_start or person.floruit_end %}
+        <p><strong>Floruit:</strong>
+            {{ person.floruit_start }} – {{ person.floruit_end }}
+        </p>
+    {% endif %}
+
+    {% if person.death %}
+        <p><strong>Died:</strong> {{ person.death }}</p>
+    {% endif %}
+</div>
+{% endblock content %}
