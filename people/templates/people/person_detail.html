@@ -1,21 +1,61 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container py-5">
-    <h1>{{ person.full_name }}</h1>
-
-    {% if person.role %}
-        <p><strong>Occupation:</strong> {{ person.get_role_display }}</p>
-    {% endif %}
-
-    {% if person.floruit_start or person.floruit_end %}
-        <p><strong>Floruit:</strong>
-            {{ person.floruit_start }} – {{ person.floruit_end }}
-        </p>
-    {% endif %}
-
-    {% if person.death %}
-        <p><strong>Died:</strong> {{ person.death }}</p>
-    {% endif %}
-</div>
+    <div class="container py-5">
+        <!-- Person Card -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="card-title mb-3">{{ person.full_name }}</h2>
+                        {% if person.role %}
+                            <p><strong>Occupation:</strong> {{ person.get_role_display }}</p>
+                        {% endif %}
+                        {% if person.floruit_start or person.floruit_end %}
+                            <p><strong>Floruit:</strong> {{ person.floruit_start }} – {{ person.floruit_end }}</p>
+                        {% endif %}
+                        {% if person.death %}
+                            <p><strong>Died:</strong> {{ person.death }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Associated Buildings -->
+        {% if person.building_phases.all %}
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-8">
+                    <h3>Associated Buildings</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                {% for phase in person.building_phases.all %}
+                    <div class="col-md-8">
+                        <div class="card shadow mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'record_detail' phase.building.pk %}">{{ phase.building.name }}</a>
+                                </h5>
+                                {% if phase.building.location %}
+                                    <p><strong>Location:</strong> {{ phase.building.location }}</p>
+                                {% endif %}
+                                {% if phase.building.county %}
+                                    <p><strong>County:</strong> {{ phase.building.county }}</p>
+                                {% endif %}
+                                {% if phase.start or phase.end %}
+                                    <p>
+                                        <strong>Phase:</strong>
+                                        {% if phase.start %}{{ phase.start }}{% endif %}
+                                        {% if phase.end %}–{{ phase.end }}{% endif %}
+                                    </p>
+                                {% endif %}
+                                {% if phase.notes %}
+                                    <p><strong>Notes:</strong> {{ phase.notes }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 {% endblock content %}
