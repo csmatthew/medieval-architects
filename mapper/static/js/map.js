@@ -58,7 +58,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 data.forEach(record => {
                     const marker = L.marker([record.latitude, record.longitude]);
-                    const popupParts = [record.name];
+                    const popupParts = [];
+
+                    // Clickable anchor for the record name in the popup
+                    if (record.name) {
+                        popupParts.push(`<a href="/record/${record.id}/">${record.name}</a>`);
+                    }
 
                     if (record.location) {
                         popupParts.push(record.location);
@@ -180,3 +185,5 @@ function filterMarkers(data) {
 
     map.addLayer(allMarkers);
 }
+
+

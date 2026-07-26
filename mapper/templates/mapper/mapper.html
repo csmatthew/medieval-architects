@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% load static %} {% block additional_css %}
+{% extends "base.html" %} 
+{% load static %} 
+{% block additional_css %}
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <!-- Leaflet.markercluster CSS -->
@@ -83,9 +85,9 @@
 {% endblock content %} {% block additional_scripts %}
 <!-- Custom JS -->
 <!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="{% static 'js/leaflet.js' %}"></script>
 <!-- Leaflet.markercluster JS -->
-<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script src="{% static 'js/leaflet.markercluster.js' %}"></script>
 <!-- Custom Map JS -->
 <script src="{% static 'js/map.js' %}"></script>
 <script>
