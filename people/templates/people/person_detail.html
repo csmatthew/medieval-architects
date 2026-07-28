@@ -33,7 +33,7 @@
                         <div class="card shadow mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <a href="{% url 'record_detail' phase.building.pk %}">{{ phase.building.name }}</a>
+                                    <a href="{% url 'record_detail' phase.building.slug %}">{{ phase.building.name }}</a>
                                 </h5>
                                 {% if phase.building.location %}
                                     <p><strong>Location:</strong> {{ phase.building.location }}</p>

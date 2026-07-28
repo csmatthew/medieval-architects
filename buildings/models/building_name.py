@@ -1,10 +1,12 @@
 from django.db import models
+from django.utils.text import slugify
 from chronology.models import UncertainDate
 from .building_type import BuildingType
 
 
 class Building(models.Model):
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     location = models.CharField(max_length=200, blank=True, null=True)
     building_type = models.ForeignKey(
         BuildingType, on_delete=models.CASCADE, null=True, blank=True
@@ -88,3 +90,20 @@ class Building(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.name) or f"building-{self.pk or ''}"
+            slug = base
+            counter = 1
+
+            while type(self).objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return f"/buildings/{self.slug}/"

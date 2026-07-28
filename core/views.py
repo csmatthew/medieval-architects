@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db import models
 
@@ -61,6 +61,11 @@ def record_list(request):
     return render(request, 'core/record_list.html', {'page_obj': page_obj})
 
 
-def record_detail(request, pk):
+def record_detail_by_pk(request, pk):
     record = get_object_or_404(Building, pk=pk)
+    return redirect('record_detail', slug=record.slug)
+
+
+def record_detail(request, slug):
+    record = get_object_or_404(Building, slug=slug)
     return render(request, 'core/record_detail.html', {'record': record})

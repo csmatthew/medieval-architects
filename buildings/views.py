@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models.building_name import Building
 
@@ -32,6 +32,7 @@ def building_georef_data(request):
         data.append(
             {
                 "id": building.id,
+                "slug": building.slug,
                 "name": building.name,
                 "location": building.location,
                 "county": building.county,
@@ -41,3 +42,12 @@ def building_georef_data(request):
         )
 
     return JsonResponse(data, safe=False)
+
+
+def building_detail_view(request, slug):
+    building = get_object_or_404(Building, slug=slug)
+    return render(
+        request,
+        'buildings/building_detail.html',
+        {'building': building}
+    )

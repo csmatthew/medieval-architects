@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Clickable anchor for the record name in the popup
                     if (record.name) {
-                        popupParts.push(`<a href="/record/${record.id}/">${record.name}</a>`);
+                        popupParts.push(`<a href="/buildings/${record.slug}/">${record.name}</a>`);
                     }
 
                     if (record.location) {
