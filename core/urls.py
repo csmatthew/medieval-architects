@@ -1,5 +1,11 @@
 from django.urls import path
-from .views import about_view, search_view, record_list, record_detail, record_detail_by_pk
+from .views import (
+    about_view,
+    search_view,
+    record_list,
+    record_detail,
+    record_detail_by_pk,
+)
 
 
 urlpatterns = [

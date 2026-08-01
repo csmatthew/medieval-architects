@@ -45,9 +45,14 @@ def building_georef_data(request):
 
 
 def building_detail_view(request, slug):
-    building = get_object_or_404(Building, slug=slug)
+    building = get_object_or_404(
+        Building.objects.select_related("geo_ref"), slug=slug
+    )
     return render(
         request,
         'buildings/building_detail.html',
-        {'building': building}
+        {
+            'building': building,
+            'geo_ref': getattr(building, 'geo_ref', None),
+        }
     )

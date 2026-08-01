@@ -97,7 +97,13 @@ class Building(models.Model):
             slug = base
             counter = 1
 
-            while type(self).objects.filter(slug=slug).exclude(pk=self.pk).exists():
+            while (
+                type(self)
+                .objects
+                .filter(slug=slug)
+                .exclude(pk=self.pk)
+                .exists()
+            ):
                 slug = f"{base}-{counter}"
                 counter += 1
 

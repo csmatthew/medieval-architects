@@ -7,7 +7,16 @@
             <div class="card shadow">
                 <div class="card-body">
                     <h2 class="card-title mb-3">{{ building.name }}</h2>
-                    <p class="text-muted mb-4">Slug: {{ building.slug }}</p>
+                    <p class="text-muted">Slug: {{ building.slug }}</p>
+                    <p class="text-muted">Location: {{ building.location }}</p>
+                    <p class="text-muted">County: {{ building.county }}</p>
+                    {% if geo_ref %}
+                    <p class="text-muted">Latitude: {{ geo_ref.latitude }}</p>
+                    <p class="text-muted">Longitude: {{ geo_ref.longitude }}</p>
+                    {% else %}
+                    <p class="text-muted">Latitude: not set</p>
+                    <p class="text-muted">Longitude: not set</p>
+                    {% endif %}
                     <a href="{% url 'record_list' %}" class="btn btn-secondary">Back to Records</a>
                     <a href="{% url 'mapper' %}" class="btn btn-primary ms-2">Return to Map</a>
                 </div>
