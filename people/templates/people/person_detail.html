@@ -1,4 +1,17 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #person-buildings-map {
+            min-height: 420px;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+    </style>
+{% endblock additional_css %}
+
 {% block content %}
     <div class="container py-5">
         <!-- Person Card -->
@@ -21,6 +34,15 @@
             </div>
         </div>
         <!-- Associated Buildings -->
+
+        {% if associated_buildings_map %}
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-10">
+                    <h3 class="mb-3">Associated Buildings Map</h3>
+                    <div id="person-buildings-map" class="shadow"></div>
+                </div>
+            </div>
+        {% endif %}
         {% if person.building_phases.all %}
             <div class="row justify-content-center mt-5">
                 <div class="col-md-8">
@@ -57,5 +79,64 @@
                 {% endfor %}
             </div>
         {% endif %}
+
+        
     </div>
 {% endblock content %}
+
+{% block additional_scripts %}
+    {% if associated_buildings_map %}
+        <script src="{% static 'js/leaflet.js' %}"></script>
+        {{ associated_buildings_map|json_script:"person-buildings-data" }}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const mapElement = document.getElementById('person-buildings-map');
+                const dataElement = document.getElementById('person-buildings-data');
+
+                if (!mapElement || !dataElement) {
+                    return;
+                }
+
+                const buildings = JSON.parse(dataElement.textContent);
+                const map = L.map('person-buildings-map', {
+                    scrollWheelZoom: false,
+                    zoomControl: true,
+                });
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                const bounds = [];
+
+                buildings.forEach(function (building) {
+                    const marker = L.marker([building.latitude, building.longitude]).addTo(map);
+                    const popupParts = [];
+
+                    popupParts.push('<a href="/buildings/' + building.slug + '/">' + building.name + '</a>');
+
+                    if (building.location) {
+                        popupParts.push(building.location);
+                    }
+
+                    if (building.county) {
+                        popupParts.push(building.county);
+                    }
+
+                    if (building.phases && building.phases.length) {
+                        popupParts.push('<strong>Phase(s):</strong><br>' + building.phases.join('<br>'));
+                    }
+
+                    marker.bindPopup(popupParts.join('<br>'));
+                    bounds.push([building.latitude, building.longitude]);
+                });
+
+                if (bounds.length === 1) {
+                    map.setView(bounds[0], 12);
+                } else {
+                    map.fitBounds(bounds, { padding: [30, 30] });
+                }
+            });
+        </script>
+    {% endif %}
+{% endblock additional_scripts %}

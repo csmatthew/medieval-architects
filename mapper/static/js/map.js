@@ -1,6 +1,7 @@
 let map; // Define map variable globally
 let allMarkers = L.markerClusterGroup(); // Marker cluster group
 let buildingMarkers = L.markerClusterGroup();
+window.markerMap = window.markerMap || {};
 
 function getQueryParams() {
     const params = {};
@@ -11,6 +12,22 @@ function getQueryParams() {
         }
     });
     return params;
+}
+
+function focusOnBuilding(data, buildingSlug) {
+    const record = data.find(item => item.slug === buildingSlug);
+
+    if (!record) {
+        return false;
+    }
+
+    map.setView([record.latitude, record.longitude], 15);
+
+    if (window.markerMap[record.slug]) {
+        window.markerMap[record.slug].openPopup();
+    }
+
+    return true;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -55,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 buildingMarkers.clearLayers();
+                window.markerMap = {};
 
                 data.forEach(record => {
                     const marker = L.marker([record.latitude, record.longitude]);
@@ -74,13 +92,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     marker.bindPopup(popupParts.join('<br>'));
+                    window.markerMap[record.slug] = marker;
                     buildingMarkers.addLayer(marker);
                 });
 
                 if (data.length > 0) {
                     map.addLayer(buildingMarkers);
 
-                    if (!(params.lat && params.lng)) {
+                    if (params.building) {
+                        focusOnBuilding(data, params.building);
+                    } else if (params.lat && params.lng) {
+                        const zoom = params.zoom ? parseInt(params.zoom) : 15;
+                        map.setView([parseFloat(params.lat), parseFloat(params.lng)], zoom);
+                    } else {
                         map.fitBounds(buildingMarkers.getBounds().pad(0.2));
                     }
                 }

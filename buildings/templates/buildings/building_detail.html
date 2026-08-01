@@ -43,7 +43,7 @@
 
                     <a href="{% url 'record_list' %}" class="btn btn-secondary">Back to Records</a>
                     {% if geo_ref %}
-                    <a href="{% url 'mapper' %}?lat={{ geo_ref.latitude }}&lng={{ geo_ref.longitude }}&zoom=10" class="btn btn-primary ms-2">Return to Map</a>
+                    <a href="{% url 'mapper' %}?building={{ building.slug }}" class="btn btn-primary ms-2">Return to Map</a>
                     {% else %}
                     <a href="{% url 'mapper' %}" class="btn btn-primary ms-2">Return to Map</a>
                     {% endif %}
