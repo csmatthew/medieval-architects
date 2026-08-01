@@ -1,7 +1,9 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from django.db.models import Prefetch
 from django.shortcuts import render, get_object_or_404
 
+from .models.building_phase import BuildingPhase
 from .models.building_name import Building
 
 
@@ -46,7 +48,17 @@ def building_georef_data(request):
 
 def building_detail_view(request, slug):
     building = get_object_or_404(
-        Building.objects.select_related("geo_ref"), slug=slug
+        Building.objects.select_related("geo_ref").prefetch_related(
+            Prefetch(
+                "phases",
+                queryset=BuildingPhase.objects.select_related(
+                    "person",
+                    "start",
+                    "end",
+                ),
+            )
+        ),
+        slug=slug,
     )
     return render(
         request,
@@ -54,5 +66,6 @@ def building_detail_view(request, slug):
         {
             'building': building,
             'geo_ref': getattr(building, 'geo_ref', None),
+            'phases': building.phases.all(),
         }
     )
