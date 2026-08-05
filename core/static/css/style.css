@@ -1,0 +1,30 @@
+/* ============================
+   THEME VARIABLES
+   ============================ */
+:root {
+    --bg-color: #f4f1e8; /* Light parchment */
+    --text-color: #222;
+    --card-bg: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="dark"] {
+    --bg-color: #1b1b1b; /* Deep charcoal */
+    --text-color: #e6e6e6;
+    --card-bg: rgba(40, 40, 40, 0.85);
+}
+
+/* ============================
+   GLOBAL STYLES
+   ============================ */
+html,
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.content-wrapper {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
