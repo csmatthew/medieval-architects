@@ -12,6 +12,11 @@ def about_view(request):
     return render(request, 'core/about.html')
 
 
+def home_view(request):
+    """View for the site home page."""
+    return render(request, 'home.html')
+
+
 def search_view(request):
     """Search across Buildings and People.
 
