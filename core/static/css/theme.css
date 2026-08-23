@@ -1,0 +1,22 @@
+/* =========================================
+   THEME VARIABLES — SINGLE SOURCE OF TRUTH
+   ========================================= */
+
+:root {
+    /* Light theme */
+    --bg-color-light: #f4f1e8;
+    --text-color-light: #222;
+    --card-bg-light: rgba(255, 255, 255, 0.85);
+
+    /* Dark theme */
+    --bg-color-dark: #1b1b1b;
+    --text-color-dark: #e6e6e6;
+    --card-bg-dark: rgba(40, 40, 40, 0.85);
+
+    /* Toggle colours */
+    --toggle-track-light: rgba(156, 174, 192, 0.27);
+    --toggle-knob-light: rgba(156, 174, 192, 0.55);
+
+    --toggle-track-dark: rgba(230, 230, 230, 0.25);
+    --toggle-knob-dark: rgba(230, 230, 230, 0.55);
+}

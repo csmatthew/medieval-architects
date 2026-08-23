@@ -1,35 +1,14 @@
-/* Created By Joseph Shenton @TeamiHackify 
-
-Please feel free to use this toggle if you like. But I request that you give credit to me thank you */
-
-body {
-  background: #25272A;
-  -webkit-transition: background-color 150ms ease-out !important;
-  transition: background-color 150ms ease-out !important;
-}
-
-body.day-background {
-  background: #FFDB88;
-}
+/* Dark mode toggle widget styling only */
 
 .button-con {
-  cursor: default;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -76px;
-  margin-top: -18px;
-}
-
-#dayIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 1rem;
   position: relative;
-  width: 26px;
-  height: 26px;
-  top: -3px;
-  margin: 0 7px;
-  fill: #9caec0;
 }
 
+#dayIcon,
 #nightIcon {
   position: relative;
   width: 26px;
@@ -37,27 +16,22 @@ body.day-background {
   top: -3px;
   margin: 0 7px;
   fill: #9caec0;
-}
-
-#dayIcon, #nightIcon {
   cursor: pointer;
+  z-index: 5;
 }
 
 .toggle {
   display: none;
 }
 
-.toggle, .toggle:after, .toggle:before, .toggle *, .toggle *:after, .toggle *:before, .toggle + .toggle-button {
-  -moz-box-sizing: border-box;
+.toggle,
+.toggle:after,
+.toggle:before,
+.toggle *,
+.toggle *:after,
+.toggle *:before,
+.toggle + .toggle-button {
   box-sizing: border-box;
-}
-
-.toggle::-moz-selection, .toggle:after::-moz-selection, .toggle:before::-moz-selection, .toggle *::-moz-selection, .toggle *:after::-moz-selection, .toggle *:before::-moz-selection, .toggle + .toggle-button::-moz-selection {
-  background: none;
-}
-
-.toggle::selection, .toggle:after::selection, .toggle:before::selection, .toggle *::selection, .toggle *:after::selection, .toggle *:before::selection, .toggle + .toggle-button::selection {
-  background: none;
 }
 
 .toggle + .toggle-button {
@@ -67,47 +41,24 @@ body.day-background {
   height: 2em;
   position: relative;
   cursor: pointer;
-  border: 2px solid #333;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  border: 2px solid var(--toggle-track);
+  border-radius: 2em;
+  padding: 2px;
+  transition: all .2s ease;
+  z-index: 10;
 }
 
-.toggle + .toggle-button:after, .toggle + .toggle-button:before {
-  position: relative;
-  display: block;
+.toggle + .toggle-button:after {
   content: "";
   width: 50%;
   height: 100%;
-}
-
-.toggle + .toggle-button:after {
-  left: 0;
-}
-
-.toggle + .toggle-button:before {
-  display: none;
-}
-
-.toggle:checked + .toggle-button:after {
-  left: 50%;
-}
-
-.toggle + .toggle-button {
-  padding: 2px;
-  -webkit-transition: all .2s ease;
-  transition: all .2s ease;
-  border: 2px solid rgba(156, 174, 192, 0.27);
-  border-radius: 2em;
-}
-
-.toggle + .toggle-button:after {
-  -webkit-transition: all .2s ease;
-  transition: all .2s ease;
-  background: rgba(156, 174, 192, 0.27);
-  content: "";
+  background: var(--toggle-knob);
   border-radius: 1em;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all .2s ease;
+  z-index: 11;
 }
 
 .toggle:checked + .toggle-button:after {
