@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-4">
@@ -6,4 +7,44 @@
   <p>This is the site home page.</p>
   <p><a href="{% url 'mapper' %}">Open map</a></p>
 </div>
+
+<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+
+    <div class="carousel-item active">
+      <img src="{% static 'images/Middle_Littleton_Tithe_Barn.jpg' %}"
+      class="d-block w-100"
+      width="3840"
+      height="2880"
+      alt="Slide 1">
+    </div>
+
+    <div class="carousel-item">
+      <img src="{% static 'images/Shotteswell_StLaurence_SouthArcade_EngagedCapitalEast.jpg' %}"
+      class="d-block w-100"
+      width="3000"
+      height="1800"
+      alt="Slide 2">
+    </div>
+
+    <div class="carousel-item">
+      <img src="{% static 'images/Ss_Peter_and_Thomas_Church.jpg' %}"
+      class="d-block w-100"
+      width="3500"
+      height="2333"
+      alt="Slide 3">
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
 {% endblock content %}
