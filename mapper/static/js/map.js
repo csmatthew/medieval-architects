@@ -1,7 +1,29 @@
 let map; // Define map variable globally
 let allMarkers = L.markerClusterGroup(); // Marker cluster group
 let buildingMarkers = L.markerClusterGroup();
+let lightTileLayer;
+let darkTileLayer;
+let activeTileLayer;
 window.markerMap = window.markerMap || {};
+
+function updateMapTheme(theme) {
+    if (!map || !lightTileLayer || !darkTileLayer) {
+        return;
+    }
+
+    const nextTileLayer = theme === "dark" ? darkTileLayer : lightTileLayer;
+
+    if (activeTileLayer === nextTileLayer) {
+        return;
+    }
+
+    if (activeTileLayer) {
+        map.removeLayer(activeTileLayer);
+    }
+
+    nextTileLayer.addTo(map);
+    activeTileLayer = nextTileLayer;
+}
 
 function getQueryParams() {
     const params = {};
@@ -47,9 +69,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         mapContainer._leaflet_map = map;
 
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        lightTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri'
-        }).addTo(map);
+        });
+        darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 20
+        });
+
+        updateMapTheme(document.documentElement.dataset.theme);
+
+        // The global theme toggle updates data-theme on <html>.
+        const themeObserver = new MutationObserver(() => {
+            updateMapTheme(document.documentElement.dataset.theme);
+        });
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
 
         // Add zoom control to the bottom right
         L.control.zoom({
@@ -209,5 +247,4 @@ function filterMarkers(data) {
 
     map.addLayer(allMarkers);
 }
-
 
