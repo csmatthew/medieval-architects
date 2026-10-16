@@ -2,18 +2,15 @@ let map; // Define map variable globally
 let allMarkers = L.markerClusterGroup(); // Marker cluster group
 let buildingMarkers = L.markerClusterGroup();
 let lightTileLayer;
-let darkTileLayer;
 let activeTileLayer;
 window.markerMap = window.markerMap || {};
 
-function updateMapTheme(theme) {
-    if (!map || !lightTileLayer || !darkTileLayer) {
+function updateMapTheme() {
+    if (!map || !lightTileLayer) {
         return;
     }
 
-    const nextTileLayer = theme === "dark" ? darkTileLayer : lightTileLayer;
-
-    if (activeTileLayer === nextTileLayer) {
+    if (activeTileLayer === lightTileLayer) {
         return;
     }
 
@@ -21,8 +18,8 @@ function updateMapTheme(theme) {
         map.removeLayer(activeTileLayer);
     }
 
-    nextTileLayer.addTo(map);
-    activeTileLayer = nextTileLayer;
+    lightTileLayer.addTo(map);
+    activeTileLayer = lightTileLayer;
 }
 
 function getQueryParams() {
@@ -72,17 +69,12 @@ document.addEventListener('DOMContentLoaded', function () {
         lightTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri'
         });
-        darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-            subdomains: 'abcd',
-            maxZoom: 20
-        });
 
-        updateMapTheme(document.documentElement.dataset.theme);
+        updateMapTheme();
 
         // The global theme toggle updates data-theme on <html>.
         const themeObserver = new MutationObserver(() => {
-            updateMapTheme(document.documentElement.dataset.theme);
+            updateMapTheme();
         });
         themeObserver.observe(document.documentElement, {
             attributes: true,
@@ -247,4 +239,3 @@ function filterMarkers(data) {
 
     map.addLayer(allMarkers);
 }
-
