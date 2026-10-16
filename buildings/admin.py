@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from .models.building_name import Building
 from .models.building_phase import BuildingPhase
 from .models.building_type import BuildingType
@@ -6,6 +7,7 @@ from .models.building_category import Category
 from .models.building_subtype import Subtype
 from .models.building_element import Element
 from .models.georef import GeoRef
+from chronology.models import UncertainDate
 
 
 class GeoRefInline(admin.StackedInline):
@@ -19,9 +21,136 @@ class BuildingPhaseInline(admin.TabularInline):
     autocomplete_fields = ("person", "elements")
 
 
+class BuildingAdminForm(forms.ModelForm):
+    construction_start_year = forms.IntegerField(
+        label="Year", required=False
+    )
+    construction_start_month = forms.IntegerField(
+        label="Month", required=False, min_value=1, max_value=12
+    )
+    construction_start_day = forms.IntegerField(
+        label="Day", required=False, min_value=1, max_value=31
+    )
+    construction_start_qualifier = forms.ChoiceField(
+        label="Qualifier",
+        choices=UncertainDate.QUALIFIERS,
+        required=False,
+    )
+    construction_end_year = forms.IntegerField(
+        label="Year", required=False
+    )
+    construction_end_month = forms.IntegerField(
+        label="Month", required=False, min_value=1, max_value=12
+    )
+    construction_end_day = forms.IntegerField(
+        label="Day", required=False, min_value=1, max_value=31
+    )
+    construction_end_qualifier = forms.ChoiceField(
+        label="Qualifier",
+        choices=UncertainDate.QUALIFIERS,
+        required=False,
+    )
+
+    class Meta:
+        model = Building
+        exclude = ("construction_start", "construction_end")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._set_date_initial("construction_start", self.instance.construction_start)
+        self._set_date_initial("construction_end", self.instance.construction_end)
+
+    def _set_date_initial(self, prefix, uncertain_date):
+        if uncertain_date is None:
+            self.fields[f"{prefix}_qualifier"].initial = "exact"
+            return
+
+        self.initial.update(
+            {
+                f"{prefix}_year": uncertain_date.year,
+                f"{prefix}_month": uncertain_date.month,
+                f"{prefix}_day": uncertain_date.day,
+                f"{prefix}_qualifier": uncertain_date.qualifier,
+            }
+        )
+
+    def save(self, commit=True):
+        building = super().save(commit=False)
+        if commit:
+            building.save()
+        self._save_date(building, "construction_start")
+        self._save_date(building, "construction_end")
+        if commit:
+            self.save_m2m()
+        return building
+
+    def _save_date(self, building, prefix):
+        values = {
+            "year": self.cleaned_data[f"{prefix}_year"],
+            "month": self.cleaned_data[f"{prefix}_month"],
+            "day": self.cleaned_data[f"{prefix}_day"],
+            "qualifier": self.cleaned_data[f"{prefix}_qualifier"] or "exact",
+        }
+        current = getattr(building, prefix)
+        has_values = (
+            values["year"] is not None
+            or values["month"] is not None
+            or values["day"] is not None
+            or values["qualifier"] != "exact"
+        )
+
+        if not has_values:
+            if current is not None:
+                setattr(building, prefix, None)
+                building.save(update_fields=[prefix])
+            return
+
+        if current is None:
+            current = UncertainDate.objects.create(**values)
+            setattr(building, prefix, current)
+            building.save(update_fields=[prefix])
+            return
+
+        for field, value in values.items():
+            setattr(current, field, value)
+        current.save()
+
+
 @admin.register(Building)
 class BuildingAdmin(admin.ModelAdmin):
+    form = BuildingAdminForm
     exclude = ("people",)
+    fieldsets = (
+        (None, {
+            "fields": (
+                "name",
+                "slug",
+                "location",
+                "county",
+                "building_type",
+            )
+        }),
+        ("Construction start", {
+            "fields": (
+                (
+                    "construction_start_year",
+                    "construction_start_month",
+                    "construction_start_day",
+                    "construction_start_qualifier",
+                ),
+            )
+        }),
+        ("Construction end", {
+            "fields": (
+                (
+                    "construction_end_year",
+                    "construction_end_month",
+                    "construction_end_day",
+                    "construction_end_qualifier",
+                ),
+            )
+        }),
+    )
     list_display = (
         "name",
         "location",
