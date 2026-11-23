@@ -33,3 +33,4 @@ z_reference_personal/
 # Ignore database files
 *.db
 backup.sql
+.dump
